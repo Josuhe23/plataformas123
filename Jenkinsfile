@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     tools {
-        dockerTool 'dockertools' 
-        nodejs 'NodeJs24'
+        dockerTool 'dockertools'
     }
 
     environment {
@@ -20,8 +19,9 @@ pipeline {
             }
         }
 
-        stage('Ejecutar Tests') {
+        stage('Dar permisos y Ejecutar Tests') {
             steps {
+                sh 'chmod +x ./node_modules/.bin/jest || true'
                 sh 'npx jest'
             }
         }
