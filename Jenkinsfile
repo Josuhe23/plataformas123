@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "NodeJS"                 // Herramienta Node.js configurada en Jenkins
+        dockerTool 'dockertools'         // Herramienta Docker configurada en Jenkins
+    }
+
     environment {
         IMAGE_NAME = "miweb-estatica"
         CONTAINER_NAME = "miweb-estatica"
@@ -9,25 +14,37 @@ pipeline {
     }
 
     stages {
-        stage('Instalar dependencias y Ejecutar Tests') {
+        stage('Preparar permisos') {
             steps {
-                script {
-                    docker.image('node:20').inside {
-                        sh 'npm install'
-                        sh 'npx jest'
-                    }
-                }
+                echo "🔐 Ajustando permisos para evitar errores..."
+                sh 'chmod -R 755 .'
+            }
+        }
+
+        stage('Instalar dependencias') {
+            steps {
+                echo "📦 Instalando dependencias con npm..."
+                sh 'npm install'
+            }
+        }
+
+        stage('Ejecutar tests') {
+            steps {
+                echo "🧪 Ejecutando pruebas con Jest..."
+                sh 'npm test'
             }
         }
 
         stage('Construir Imagen Docker') {
             steps {
+                echo "🐳 Construyendo imagen Docker..."
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Desplegar Contenedor') {
             steps {
+                echo "🚀 Desplegando contenedor..."
                 sh '''
                     docker stop $CONTAINER_NAME || true
                     docker rm $CONTAINER_NAME || true
@@ -42,7 +59,7 @@ pipeline {
             echo "✅ Despliegue exitoso en http://localhost:$HOST_PORT"
         }
         failure {
-            echo "❌ Falló el despliegue"
+            echo "❌ Falló el pipeline. Verifica los logs de cada etapa."
         }
     }
 }
