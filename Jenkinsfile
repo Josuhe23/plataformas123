@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20'
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "miweb-estatica"
@@ -13,16 +9,14 @@ pipeline {
     }
 
     stages {
-        stage('Instalar dependencias') {
+        stage('Instalar dependencias y Ejecutar Tests') {
             steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Dar permisos y Ejecutar Tests') {
-            steps {
-                sh 'chmod +x ./node_modules/.bin/jest || true'
-                sh 'npx jest'
+                script {
+                    docker.image('node:20').inside {
+                        sh 'npm install'
+                        sh 'npx jest'
+                    }
+                }
             }
         }
 
