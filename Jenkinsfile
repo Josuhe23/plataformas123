@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     tools {
-        dockerTool 'dockertools'  // Ajusta según tu Jenkins
+        dockerTool 'dockertools' 
+        nodejs 'NodeJs24'
     }
 
     environment {
