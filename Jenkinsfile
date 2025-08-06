@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS"                 // Herramienta Node.js configurada en Jenkins
+        nodejs "NodeJs24"                 // Herramienta Node.js configurada en Jenkins
         dockerTool 'dockertools'         // Herramienta Docker configurada en Jenkins
     }
 
