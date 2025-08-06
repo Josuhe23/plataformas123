@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        dockerTool 'dockertools'  // Cambia el nombre de la herramienta según tu configuración en Jenkins
+        dockerTool 'dockertools'  // Ajusta según tu Jenkins
     }
 
     environment {
@@ -13,6 +13,18 @@ pipeline {
     }
 
     stages {
+        stage('Instalar dependencias') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Ejecutar Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
         stage('Construir Imagen Docker') {
             steps {
                 sh 'docker build -t $IMAGE_NAME .'

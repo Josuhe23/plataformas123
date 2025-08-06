@@ -13,11 +13,12 @@ const productos = [
 let carrito = [];
 let total = 0;
 
-const grid = document.getElementById("product-grid");
-const listaCarrito = document.getElementById("lista-carrito");
-const totalSpan = document.getElementById("total");
+const grid = typeof document !== "undefined" ? document.getElementById("product-grid") : null;
+const listaCarrito = typeof document !== "undefined" ? document.getElementById("lista-carrito") : null;
+const totalSpan = typeof document !== "undefined" ? document.getElementById("total") : null;
 
 function renderProductos() {
+  if (!grid) return;
   productos.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
@@ -38,6 +39,10 @@ function agregarACarrito(producto) {
 }
 
 function actualizarCarrito() {
+  const listaCarrito = document.getElementById("lista-carrito");
+  const totalSpan = document.getElementById("total");
+  if (!listaCarrito || !totalSpan) return;
+
   listaCarrito.innerHTML = "";
   carrito.forEach(p => {
     const item = document.createElement("li");
@@ -46,6 +51,7 @@ function actualizarCarrito() {
   });
   totalSpan.textContent = total.toFixed(2);
 }
+
 
 async function pagar() {
   if (total === 0) {
@@ -92,4 +98,16 @@ async function pagar() {
   }
 }
 
-renderProductos();
+if (typeof document !== "undefined") {
+  renderProductos();
+}
+
+// Exportar para test
+module.exports = {
+  agregarACarrito,
+  actualizarCarrito,
+  carrito,
+  productos,
+  getTotal: () => total,
+  resetTotal: () => { total = 0; }
+};
