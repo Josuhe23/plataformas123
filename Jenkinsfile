@@ -22,7 +22,7 @@ pipeline {
 
         stage('Ejecutar Tests') {
             steps {
-                sh './node_modules/.bin/jest'
+                sh 'npx jest'
             }
         }
 
