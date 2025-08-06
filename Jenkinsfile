@@ -22,7 +22,7 @@ pipeline {
 
         stage('Ejecutar Tests') {
             steps {
-                sh 'npm test'
+                sh './node_modules/.bin/jest'
             }
         }
 
